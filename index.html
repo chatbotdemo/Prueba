@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Demo</title>
+    <style>
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #1b1b2f;
+    color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Título */
+#chat-title {
+    text-align: center;
+    font-size: 20px; /* Tamaño de fuente ligeramente aumentado */
+    font-weight: 700; /* Mayor grosor para hacer que el título destaque */
+    color: #ffffff;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 10;
+    text-transform: uppercase; /* Mayúsculas para un estilo más fuerte */
+    letter-spacing: 2px; /* Espaciado entre letras para un efecto visual más impactante */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipo de fuente elegante */
+    background: linear-gradient(135deg, #007acc, #00adb5); /* Degradado moderno */
+    -webkit-background-clip: text;
+    background-clip: text; /* Degradado aplicado al texto */
+    animation: titleEffect 3s ease-in-out infinite; /* Animación dinámica */
+}
+
+/* Animación del título */
+@keyframes titleEffect {
+    0% {
+        text-shadow: 0px 0px 5px rgba(0, 122, 204, 0.8), 0px 0px 10px rgba(0, 122, 204, 0.6), 0px 0px 15px rgba(0, 122, 204, 0.4);
+    }
+    50% {
+        text-shadow: 0px 0px 10px rgba(0, 173, 181, 0.8), 0px 0px 20px rgba(0, 173, 181, 0.6), 0px 0px 30px rgba(0, 173, 181, 0.4);
+    }
+    100% {
+        text-shadow: 0px 0px 5px rgba(0, 122, 204, 0.8), 0px 0px 10px rgba(0, 122, 204, 0.6), 0px 0px 15px rgba(0, 122, 204, 0.4);
+    }
+}
+
+
+/* Fondo animado de partículas */
+.particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    background: radial-gradient(circle, rgba(0,0,0,0.8) 30%, transparent);
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #007acc;
+    border-radius: 50%;
+    animation: moveParticles 10s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes moveParticles {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+}
+
+/* Contenedor del chat */
+.chat-container {
+    width: 450px;
+    max-width: 90%;
+    height: 500px;
+    border-radius: 15px;
+    background-color: #222831;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    margin-top: 10px;
+}
+
+/* Caja del chat */
+.chat-box {
+    flex: 1;
+    padding: 20px;
+    background-color: #1b1b2f;
+    border-bottom: 2px solid #007acc;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Estilo de los mensajes */
+.chat-box .message {
+    padding: 10px;
+    border-radius: 20px;
+    max-width: 80%;
+    margin: 5px 0;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #00adb5;
+    color: #fff;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background-color: #393e46;
+    color: #f4f4f9;
+}
+
+/* Estilos de los botones de opción */
+.option-button {
+    display: block;
+    margin: 6px 0;
+    padding: 8px 16px;
+    background-color: #ffffff;
+    color: #007acc;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid #007acc;
+    border-radius: 4px; /* Bordes ligeramente redondeados */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    text-transform: capitalize;
+}
+
+/* Efecto hover */
+.option-button:hover {
+    background-color: #007acc;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.1);
+}
+
+/* Efecto active */
+.option-button:active {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto focus */
+.option-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 122, 204, 0.5);
+}
+
+
+/* Título de la sección de chat */
+#title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #007acc;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Caja de entrada de texto */
+.input-box {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #333;
+    background-color: #1b1b2f;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-box input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    font-size: 14px;
+    border-radius: 25px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    color: #f4f4f9;
+    background-color: #333333;
+}
+
+.input-box button {
+    padding: 12px;
+    border: none;
+    background-color: #007acc;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+/* Animación de desvanecimiento */
+.fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Botón de reservar cita */
+.reserve-button {
+    padding: 10px 20px; /* Relleno reducido */
+    background-color: #007acc;
+    color: #fff;
+    font-size: 14px; /* Tamaño de fuente reducido */
+    font-weight: 600; /* Peso de fuente ajustado */
+    border: none;
+    border-radius: 4px; /* Esquinas ligeramente redondeadas */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    box-shadow: 0 3px 5px rgba(0, 122, 204, 0.15); /* Sombra más sutil */
+    text-transform: uppercase;
+    letter-spacing: 0.5px; /* Espaciado entre letras para un estilo más refinado */
+}
+
+/* Efecto hover */
+.reserve-button:hover {
+    background-color: #005a99;
+    transform: translateY(-1px); /* Efecto de elevación suave */
+    box-shadow: 0 6px 10px rgba(0, 122, 204, 0.25); /* Sombra aumentada en hover */
+}
+
+/* Efecto focus */
+.reserve-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.35); /* Enfoque sutil */
+}
+
+/* Estilos responsive */
+@media (max-width: 768px) {
+    .chat-container {
+        width: 90%;
+        height: 450px;
+    }
+
+    .input-box input {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .input-box button {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    .reserve-button {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-container {
+        width: 100%;
+        height: 400px;
+    }
+
+    .input-box input {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .input-box button {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    .reserve-button {
+        font-size: 14px;
+        padding: 8px 14px;
+        width: 100%;
+        margin-left: 0;
+        margin-top: 8px;
+    }
+}
+
+
+
+  </style>
+</head>
+<body>
+    <div id="chat-title">Clínica Dental Sonrisa Perfecta</div>
+    
+    <!-- Fondo de partículas -->
+    <div class="particles">
+        <div class="particle" style="top: 80%; left: 10%; animation-duration: 6s;"></div>
+        <div class="particle" style="top: 90%; left: 20%; animation-duration: 8s;"></div>
+        <div class="particle" style="top: 85%; left: 50%; animation-duration: 7s;"></div>
+        <div class="particle" style="top: 90%; left: 70%; animation-duration: 9s;"></div>
+        <div class="particle" style="top: 95%; left: 80%; animation-duration: 5s;"></div>
+    </div>
+
+<!-- Contenedor del chatbot -->
+<div class="chat-container">
+    <div class="chat-box" id="chat-box">
+      <!-- Mensajes del chatbot aparecerán aquí -->
+    </div>
+    <div class="input-box">
+      <input type="text" id="user-input" placeholder="Escribe un mensaje..." onkeydown="if(event.key === 'Enter'){sendMessage()}">
+      <button onclick="sendMessage()">➤</button>
+    </div>
+    <!-- Botón "Reservar Cita" fuera de la caja de entrada -->
+    <button class="reserve-button" onclick="window.location.href='formulario.html'">Reservar Cita</button>
+  </div>
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+  
+    const welcomeMessage = "¡Buenos días y bienvenido a Clínica Dental Sonrisa Perfecta!";
+    let optionsMessage = "¿En qué puedo ayudarte hoy? Selecciona una opción:";
+    const repeatedOptionsMessage = "¿En qué más puedo ayudarte hoy? Selecciona una opción:";
+    let isFirstTime = true;
+  
+    const mainOptions = [
+        "Horarios",
+        "Servicios",
+        "Ubicación",
+        "Contacto",
+        "Página web",
+        "Testimonios",
+        "Doctores"
+    ];
+  
+    const serviceOptions = [
+        "Blanqueamiento Dental",
+        "Implantes Dentales",
+        "Ortodoncia",
+        "Endodoncia",
+        "Limpieza y Prevención",
+        "Estética Dental"
+    ];
+  
+    function addMessage(content, sender = "bot") {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
+        messageDiv.innerHTML = content;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        messageDiv.classList.add('fade-in');
+    }
+  
+    function showMainOptions() {
+        addMessage(isFirstTime ? optionsMessage : repeatedOptionsMessage, "bot");
+        isFirstTime = false;
+  
+        const optionsContainer = document.createElement("div");
+        optionsContainer.classList.add("options-container");
+  
+        mainOptions.forEach(option => {
+            const optionButton = document.createElement("button");
+            optionButton.classList.add("option-button");
+            optionButton.innerText = option;
+            optionButton.onclick = function() {
+                processOption(option);
+            };
+            optionsContainer.appendChild(optionButton);
+        });
+  
+        chatBox.appendChild(optionsContainer);
+    }
+  
+    function showServiceOptions() {
+        addMessage("Estos son nuestros servicios. Por favor, selecciona el que deseas más información.", "bot");
+  
+        const optionsContainer = document.createElement("div");
+        optionsContainer.classList.add("options-container");
+  
+        serviceOptions.forEach(service => {
+            const serviceButton = document.createElement("button");
+            serviceButton.classList.add("option-button");
+            serviceButton.innerText = service;
+            serviceButton.onclick = function() {
+                processService(service);
+            };
+            optionsContainer.appendChild(serviceButton);
+        });
+  
+        chatBox.appendChild(optionsContainer);
+    }
+  
+    function processOption(option) {
+        let response = '';
+        switch (option) {
+            case "Horarios":
+                response = "Nuestro horario de atención es de lunes a viernes de 8:00 am a 6:00 pm, y los sábados de 9:00 am a 2:00 pm. Cerramos los domingos.";
+                break;
+            case "Servicios":
+                showServiceOptions();
+                return;
+            case "Ubicación":
+                response = "Nos encontramos en la Calle Principal, Edificio Sonrisa Perfecta, Piso 3, Ciudad, Estado, Venezuela.";
+                break;
+            case "Contacto":
+                response = "Puedes contactarnos al número <strong>+58 123 456 789</strong> o a través de nuestras redes sociales.";
+                break;
+            case "Página web":
+                response = "Visita nuestra página web en <strong>www.sonrisaperfecta.com</strong> para más información.";
+                break;
+            case "Testimonios":
+                response = `Aquí lo que dicen nuestros pacientes:
+                <br><strong>Juan Pérez</strong>: "La experiencia fue increíble, excelente profesionalismo." <br><br>
+                <strong>María López</strong>: "¡Recomiendo esta clínica a todos!" <br><br>
+                <strong>Carlos Rodríguez</strong>: "Excelente atención."`;
+                break;
+            case "Doctores":
+                response = `Nuestro equipo está conformado por los siguientes especialistas:
+                <br><strong>Dr. Ana Martínez</strong>: Ortodoncia <br><br>
+                <strong>Dr. Carlos Gómez</strong>: Cirugía Oral e Implantes Dentales <br><br>
+                <strong>Dra. Laura Rodríguez</strong>: Endodoncia`;
+                break;
+            default:
+                response = "Opción no válida, por favor selecciona una opción del menú.";
+        }
+  
+        addMessage(response, "bot");
+        showMainOptions();
+    }
+  
+    function addFollowUpMessage() {
+        const followUpMessage = "¿Deseas saber algo más? Si es así, responde solo 'Si'. De no ser así, entonces te invito a agendar una cita presionando el botón que está debajo que dice 'Reservar cita'.";
+        addMessage(followUpMessage, "bot");
+    }
+  
+    function processService(service) {
+        let response = '';
+        switch (service) {
+            case "Blanqueamiento Dental":
+                response = "El blanqueamiento dental tiene un precio de $150 a $300. Este tratamiento ayuda a mejorar el color de tus dientes eliminando manchas.";
+                break;
+            case "Implantes Dentales":
+                response = "Los implantes dentales cuestan entre $800 y $1,500 por diente. Son una solución duradera para dientes perdidos o dañados.";
+                break;
+            case "Ortodoncia":
+                response = "La ortodoncia tiene un costo entre $1,000 y $3,000. Ayuda a corregir los dientes y mandíbulas desalineadas.";
+                break;
+            case "Endodoncia":
+                response = "La endodoncia (tratamiento de conductos) tiene un precio entre $200 y $500 por diente, y es ideal para salvar dientes con infecciones profundas.";
+                break;
+            case "Limpieza y Prevención":
+                response = "La limpieza y prevención tiene un costo de $50 a $100. Es esencial para mantener una salud bucal adecuada.";
+                break;
+            case "Estética Dental":
+                response = `Ofrecemos tratamientos como:<br>
+                            - Carillas Dentales: $400 - $800<br>
+                            - Coronas Dentales: $500 - $1,200<br>
+                            - Contorneado Dental: $150 - $300`;
+                break;
+            default:
+                response = "Opción de servicio no válida.";
+        }
+  
+        addMessage(response, "bot");
+        addFollowUpMessage();
+    }
+  
+    function handleCustomResponse(userMessage) {
+        const message = userMessage.toLowerCase();
+        let response = "";
+  
+        if (message.includes("gracias") || message.includes("muchas gracias")) {
+            response = "Gracias a ti. ¡Es un placer ayudar!";
+        } else if (message.includes("precio") || message.includes("costo") || message.includes("tarifa")) {
+            response = "Para obtener información sobre precios específicos, puedes seleccionar 'Servicios' y ver los detalles de cada uno.";
+        } else {
+            response = "Disculpa, no entendí tu mensaje. Por favor, selecciona una opción del menú o pregunta algo específico.";
+        }
+  
+        addMessage(response, "bot");
+    }
+  
+    function sendMessage() {
+        const userMessage = userInput.value.trim();
+        if (userMessage) {
+            addMessage(userMessage, "user");
+            userInput.value = "";
+  
+            if (userMessage.toLowerCase() === "si") {
+                showMainOptions();
+            } else {
+                handleCustomResponse(userMessage);
+            }
+        }
+    }
+  
+    // Inicializar la conversación
+    addMessage(welcomeMessage, "bot");
+    showMainOptions();
+  </script>
+  
+
+</body>
+</html>

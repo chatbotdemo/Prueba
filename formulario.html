@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Reserva</title>
+    <style>
+        /* Fondo dinámico mejorado */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #005f99, #003b66, #007acc);
+            overflow: hidden;
+        }
+
+        /* Partículas sutiles de fondo */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 2px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .form-container {
+            width: 90%;
+            max-width: 320px; /* Ajuste de ancho para pantallas medianas */
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            background-color: #ffffff;
+            border-left: 5px solid #000000;
+            border-right: 5px solid #000000;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            animation: fadeIn 1.2s ease;
+            margin-left: auto;
+            margin-right: auto; /* Centrado horizontal */
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container h2 {
+            font-size: 1.2em;
+            color: #007acc;
+            margin-bottom: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%; /* Las cajas ocupan el 100% del formulario, pero con un max-width reducido */
+            max-width: 300px; /* Reducido para hacerlas más pequeñas */
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid #ccd1d9;
+            border-radius: 8px;
+            font-size: 0.9em;
+            background-color: #f9f9f9;
+            color: #000;
+            transition: border-color 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #007acc;
+            outline: none;
+            background-color: #fff;
+        }
+
+        button {
+            width: 100%;
+            max-width: 300px; /* Ajustado al mismo ancho que las cajas */
+            padding: 10px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #007acc;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        button:hover {
+            background-color: #005f99;
+        }
+
+        .form-container small {
+            display: block;
+            color: rgb(0, 0, 0);
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+
+        /* Responsividad para móviles */
+        @media (max-width: 600px) {
+            .form-container {
+                width: 90%;
+                max-width: 280px; /* Reducido para pantallas pequeñas */
+                padding: 15px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .form-container h2 {
+                font-size: 1.1em;
+            }
+
+            input, select, textarea {
+                font-size: 0.85em;
+                padding: 6px;
+                max-width: 260px; /* Ajuste para hacer más pequeñas las cajas */
+            }
+
+            button {
+                font-size: 0.9em;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .form-container {
+                max-width: 240px; /* Aún más reducido para pantallas muy pequeñas */
+            }
+
+            input, select, textarea {
+                font-size: 0.85em;
+                padding: 6px;
+                max-width: 220px; /* Ajuste para pantallas muy pequeñas */
+            }
+
+            button {
+                font-size: 0.9em;
+                padding: 8px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Reserva tu Cita</h2>
+    <form action="https://formspree.io/f/xyzyjknl" method="POST">
+        <input type="text" id="name" name="name" placeholder="Nombre" required>
+        <input type="text" id="surname" name="surname" placeholder="Apellido" required>
+        <input type="number" id="age" name="age" placeholder="Edad" required>
+        <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+        <input type="tel" id="phone" name="phone" placeholder="Número de teléfono" required>
+
+        <select id="service" name="service" required>
+            <option value="" disabled selected>Servicio al que desea aplicar</option>
+            <option value="Odontología General">Odontología General</option>
+            <option value="Estética Dental">Estética Dental</option>
+            <option value="Ortodoncia">Ortodoncia</option>
+            <option value="Implantes Dentales">Implantes Dentales</option>
+            <option value="Endodoncia">Endodoncia</option>
+            <option value="Periodoncia">Periodoncia</option>
+            <option value="Odontopediatría">Odontopediatría</option>
+        </select>
+
+        <textarea id="comments" name="comments" rows="4" placeholder="Comentarios adicionales"></textarea>
+
+        <button type="submit">Enviar</button>
+        <small>Nos pondremos en contacto contigo para confirmar tu cita.</small>
+    </form>
+</div>
+
+</body>
+</html>
